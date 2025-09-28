@@ -2,9 +2,12 @@ const express = require("express");
 const passport = require('passport');
 const router = express.Router();
 const authService = require('../services/authService');
+<<<<<<< HEAD
 const auth = require('../middleware/authMiddleware');
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+=======
+>>>>>>> 85a077b0f0285e85d6fbf1f679d9266e6d95e69a
 
 // Đăng ký
 router.post("/register", async (req, res) => {
@@ -46,6 +49,7 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // Lấy thông tin người dùng hiện tại
 router.get('/me', auth(), async (req, res) => {
   try {
@@ -90,6 +94,8 @@ router.put('/me', auth(), async (req, res) => {
   }
 });
 
+=======
+>>>>>>> 85a077b0f0285e85d6fbf1f679d9266e6d95e69a
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback',
