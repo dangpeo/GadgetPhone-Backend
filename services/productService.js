@@ -5,6 +5,8 @@ const getAllProducts = async () => {
 };
 
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
 const getProductById = async (id) => {
   const product = await Product.findById(id);
   if (!product) throw new Error('Không tìm thấy sản phẩm');
@@ -19,10 +21,14 @@ const getBaseUrl = () => {
 
 =======
 >>>>>>> 1a504b80e387f35991947f14e0a5868d8fec50d2
+>>>>>>> 85a077b0f0285e85d6fbf1f679d9266e6d95e69a
 const createProduct = async (data, file) => {
   const { name, price, description, quantity } = data;
   let imageUrl = '';
   if (file) {
+<<<<<<< HEAD
+    imageUrl = '/uploads/' + file.filename;
+=======
 <<<<<<< HEAD
     const relative = '/uploads/' + file.filename;
     const base = getBaseUrl();
@@ -30,6 +36,7 @@ const createProduct = async (data, file) => {
 =======
     imageUrl = '/uploads/' + file.filename;
 >>>>>>> 1a504b80e387f35991947f14e0a5868d8fec50d2
+>>>>>>> 85a077b0f0285e85d6fbf1f679d9266e6d95e69a
   }
   const product = new Product({ name, price, description, quantity, image: imageUrl });
   await product.save();
@@ -56,9 +63,12 @@ const updateProduct = async (id, data) => {
 module.exports = {
   getAllProducts,
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
   getProductById,
 =======
 >>>>>>> 1a504b80e387f35991947f14e0a5868d8fec50d2
+>>>>>>> 85a077b0f0285e85d6fbf1f679d9266e6d95e69a
   createProduct,
   deleteProduct,
   updateProduct
