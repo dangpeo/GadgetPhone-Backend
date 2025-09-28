@@ -22,7 +22,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/products", require("./routes/products"));
+<<<<<<< HEAD
 app.use("/api/wishlist", require("./routes/wishlist"));
+=======
+>>>>>>> 1a504b80e387f35991947f14e0a5868d8fec50d2
 
 // Route test
 const auth = require("./middleware/authMiddleware");

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # GadgetPhone Backend API
 
 This folder contains the backend API for the Project GadgetPhone, built with Node.js and Express.
@@ -28,3 +29,7 @@ app.get('/api/products', (req, res) => {
   // Trả về danh sách sản phẩm
 });
 ```
+=======
+# GadgetPhone-Backen
+Backen Manager
+>>>>>>> 1a504b80e387f35991947f14e0a5868d8fec50d2

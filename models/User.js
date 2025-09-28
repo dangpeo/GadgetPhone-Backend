@@ -11,7 +11,10 @@ const UserSchema = new mongoose.Schema({
   email: { type: String },
   resetCode: { type: String },
   resetCodeExpire: { type: Date },
+<<<<<<< HEAD
   wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+=======
+>>>>>>> 1a504b80e387f35991947f14e0a5868d8fec50d2
 });
 
 module.exports = mongoose.model("User", UserSchema);
