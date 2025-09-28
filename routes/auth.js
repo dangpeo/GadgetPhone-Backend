@@ -1,20 +1,13 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const passport = require('passport');
 const router = express.Router();
+const authService = require('../services/authService');
 
 // Đăng ký
 router.post("/register", async (req, res) => {
-  const { username, password, role } = req.body;
   try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const newUser = new User({ username, password: hashedPassword, role });
-    await newUser.save();
-
-    res.json({ message: "Đăng ký thành công" });
+    const result = await authService.register(req.body);
+    res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -22,24 +15,41 @@ router.post("/register", async (req, res) => {
 
 // Đăng nhập
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
   try {
-    const user = await User.findOne({ username });
-    if (!user) return res.status(400).json({ error: "Sai tài khoản hoặc mật khẩu" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Sai tài khoản hoặc mật khẩu" });
-
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    res.json({ token, role: user.role });
+    const result = await authService.login(req.body);
+    res.json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 });
+
+// Quên mật khẩu: gửi mã về Gmail
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const result = await authService.sendResetCode(req.body.email);
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Đổi mật khẩu mới bằng mã xác thực
+router.post('/reset-password', async (req, res) => {
+  try {
+    const result = await authService.resetPassword(req.body);
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
 
 module.exports = router;

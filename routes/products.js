@@ -1,16 +1,80 @@
 const express = require("express");
 const router = express.Router();
 
-// Fake product data
-const products = [
-  { id: 1, name: "iPhone 15 Pro", price: 29990000 },
-  { id: 2, name: "Samsung Galaxy S24 Ultra", price: 25990000 },
-  { id: 3, name: "Xiaomi 14 Pro", price: 18990000 }
-];
+const Product = require('../models/Product');
+const productService = require('../services/productService');
+const multer = require('multer');
+const path = require('path');
 
-// GET /api/products
-router.get("/", (req, res) => {
-  res.json(products);
+// Thiết lập lưu file upload vào thư mục uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../uploads'));
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + '-' + file.fieldname + ext);
+  }
+});
+const upload = multer({ storage });
+
+// GET /api/products - lấy danh sách sản phẩm
+router.get('/', async (req, res) => {
+  try {
+    const products = await productService.getAllProducts();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/products/:id - lấy chi tiết 1 sản phẩm
+router.get('/:id', async (req, res) => {
+  try {
+    const product = await productService.getProductById(req.params.id);
+    res.json(product);
+  } catch (err) {
+    if (err.message === 'Không tìm thấy sản phẩm') {
+      return res.status(404).json({ error: err.message });
+    }
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/products - thêm sản phẩm mới (có upload ảnh)
+router.post('/', upload.single('image'), async (req, res) => {
+  try {
+    const product = await productService.createProduct(req.body, req.file);
+    res.status(201).json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/products/:id - xóa sản phẩm
+router.delete('/:id', async (req, res) => {
+  try {
+    const result = await productService.deleteProduct(req.params.id);
+    res.json(result);
+  } catch (err) {
+    if (err.message === 'Không tìm thấy sản phẩm') {
+      return res.status(404).json({ error: err.message });
+    }
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT /api/products/:id - cập nhật sản phẩm
+router.put('/:id', async (req, res) => {
+  try {
+    const product = await productService.updateProduct(req.params.id, req.body);
+    res.json(product);
+  } catch (err) {
+    if (err.message === 'Không tìm thấy sản phẩm') {
+      return res.status(404).json({ error: err.message });
+    }
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

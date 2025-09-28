@@ -8,6 +8,10 @@ const UserSchema = new mongoose.Schema({
     enum: ["admin", "customer"], 
     default: "customer" 
   },
+  email: { type: String },
+  resetCode: { type: String },
+  resetCodeExpire: { type: Date },
+  wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
 });
 
 module.exports = mongoose.model("User", UserSchema);
